@@ -38,9 +38,11 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <returns>List of todo items</returns>
         [HttpGet]
-        public IEnumerable<TodoItem> GetAll()
+        public IActionResult GetAll()
         {
-            return _context.TodoItems.ToList();
+            var result = _context.TodoItems.ToList();
+
+            return new ObjectResult(result);
         }
 
         /// <summary>
@@ -76,6 +78,7 @@ namespace TodoApi.Controllers
             _context.TodoItems.Add(item);
             _context.SaveChanges();
 
+            // The created at route should return a link to the new item.
             return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
         }
 
@@ -84,7 +87,7 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <param name="id">Id of item to update</param>
         /// <param name="item">The text of the todo</param>
-        /// <returns>No Content Result</returns>
+        /// <returns>OK result</returns>
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] TodoItem item)
         {
@@ -104,14 +107,14 @@ namespace TodoApi.Controllers
 
             _context.TodoItems.Update(todo);
             _context.SaveChanges();
-            return new NoContentResult();
+            return new OkResult();
         }
 
         /// <summary>
         /// Delete a Todo Item
         /// </summary>
         /// <param name="id">ID of item to delete</param>
-        /// <returns>No Content Result</returns>
+        /// <returns>OK if successfull</returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
@@ -123,7 +126,7 @@ namespace TodoApi.Controllers
 
             _context.TodoItems.Remove(todo);
             _context.SaveChanges();
-            return new NoContentResult();
+            return new OkResult();
         }
     }
 }
