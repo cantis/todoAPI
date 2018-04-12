@@ -11,7 +11,7 @@ namespace TodoApi.Test
     [TestClass]
     public class TodoControllerTests
     {
-        private Mock<TodoContext> _mockContext;
+        private Mock<ITodoContext> _mockContext;
 
         [TestInitialize]
         public void TestInit()
@@ -27,10 +27,13 @@ namespace TodoApi.Test
                                     new TodoItem {Name = "Item6"},
                                     new TodoItem {Name = "Item7"},
                                     new TodoItem {Name = "Item8"}
-                                }).AsQueryable();
+                                });
 
-            _mockContext = new Mock<TodoContext>();
-            _mockContext.Setup(x => x.TodoItems).Returns(mockTodoData as DbSet<TodoItem>);
+            var ms =  mockTodoData.AsQueryable() as DbSet<TodoItem>;
+
+            _mockContext = new Mock<ITodoContext>();
+            _mockContext.Setup(x => x.TodoItems).Returns(ms);
+            
         }
 
 
