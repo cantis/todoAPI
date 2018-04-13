@@ -14,9 +14,9 @@ namespace TodoApi.Managers
 
         private readonly TodoContext _context;
 
-        public TodoManager(TodoContext context)
+        public TodoManager(ITodoContext context)
         {
-            _context = context;
+            _context = context as TodoContext;
 
             if (_context.TodoItems.Any()) return;
 

@@ -29,10 +29,13 @@ namespace TodoApi.Test
                                     new TodoItem {Name = "Item8"}
                                 });
 
-            var ms =  mockTodoData.AsQueryable() as DbSet<TodoItem>;
+            var ms = new Mock<DbSet<TodoItem>>();
+            ms.Setup(x => x.Any()).Returns(true);
+            ms.Setup(x => x.Find(It.IsAny<int>())).Returns((int p) => mockTodoData.FirstOrDefault(x => x.Id == p));
 
             _mockContext = new Mock<ITodoContext>();
-            _mockContext.Setup(x => x.TodoItems).Returns(ms);
+            _mockContext.Setup(x => x.TodoItems).Returns(ms.Object);
+            
             
         }
 
